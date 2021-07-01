@@ -24,11 +24,15 @@ let persons = [
 ]
 
 const typeDefs = gql`
+  type Address {
+    street: String!
+    city: String!
+  }
+
   type Person {
     name: String!
     phone: String
-    street: String!
-    city: String!
+    address: Address!
     id: ID!
   }
 
@@ -48,9 +52,13 @@ const resolvers = {
   Person: {
     name: (root) => root.name.toUpperCase(),
     phone: (root) => root.phone,
-    street: (root) => root.street,
-    city: (root) => root.city,
-    id: (root) => root.id
+    id: (root) => root.id,
+    address: (root) => {
+      return {
+        street: root.street,
+        city: root.city
+      }
+    },
   }
 }
 
