@@ -44,6 +44,13 @@ const resolvers = {
     allPersons: () => persons,
     findPerson: (root, args) => 
       persons.find(p => p.name === args.name)
+  },
+  Person: {
+    name: (root) => root.name.toUpperCase(),
+    phone: (root) => root.phone,
+    street: (root) => root.street,
+    city: (root) => root.city,
+    id: (root) => root.id
   }
 }
 
