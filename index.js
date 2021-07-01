@@ -17,7 +17,7 @@ let persons = [
     id: 2
   },
   {
-    name: "Arto hellas",
+    name: "hellas",
     street: "Nallena",
     city: "Helsinki",
     id: 3
@@ -43,6 +43,10 @@ const typeDefs = gql`
        phone: String
        street: String!
        city: String!
+    ): Person
+    editNumber(
+      name: String!
+      phone: String!
     ): Person
   }
 
@@ -75,7 +79,7 @@ const resolvers = {
       persons.find(p => p.name === args.name)
   },
   Person: {
-    name: (root) => root.name.toUpperCase(),
+    name: (root) => root.name,
     phone: (root) => root.phone,
     id: (root) => root.id,
     address: (root) => {
@@ -93,8 +97,18 @@ const resolvers = {
       const person = { ...args, id: uuid() }
       persons = [ ...persons, person ];
       return person
+    },
+    editNumber: (root, args) => {
+      const person = persons.find(p => p.name === args.name);
+      if(!person) {
+        return null
+      };
+
+      const updatedPerson = { ...person, phone: args.phone };
+      persons = persons.map(p => p.name === args.name ? updatedPerson : p)
+      return updatedPerson
     }
-  }
+  },
 }
 
 const server = new ApolloServer({
